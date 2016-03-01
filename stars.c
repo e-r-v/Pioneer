@@ -1,12 +1,24 @@
 #include "stars.h"
 
+#define KVADRANT_START               -1
+#define KVADRANT_VALUE                2
+#define SPEED_SRECISION             100
+#define ACCELERATION_PERCENTAGE    0.02
+#define BIG_STAR_SIZE                 2
+#define SMALL_STAR_SIZE               1
+#define STAR_SIZE_BORDER              5
+#define STAR_BRITNESS               220
+#define STAR_COLOR_RANGE             36
+#define BLACK_CIRCLE_RADIUS         110
+
+
 void init_star(star *new)
 {
-	new -> x = -1 + rand() % 2;
-	new -> y = -1 + rand() % 2;
+	new -> x = KVADRANT_START + rand() % KVADRANT_VALUE;
+	new -> y = KVADRANT_START + rand() % KVADRANT_VALUE;
 
-	new -> xv = (float)(rand() % 100) / 100;
-	new -> yv = (float)(rand() % 100) / 100;
+	new -> xv = (float)(rand() % SPEED_SRECISION) / SPEED_SRECISION;
+	new -> yv = (float)(rand() % SPEED_SRECISION) / SPEED_SRECISION;
 
 	if (new -> x < 0)
 		new -> xv = - new -> xv;
@@ -14,17 +26,17 @@ void init_star(star *new)
 	if (new -> y < 0)
 		new -> yv = - new -> yv;
 
-	new -> xa = new -> xv * 0.02;
-	new -> ya = new -> yv * 0.02;
+	new -> xa = new -> xv * ACCELERATION_PERCENTAGE;
+	new -> ya = new -> yv * ACCELERATION_PERCENTAGE;
 		
-	new -> r = 2;
+	new -> r = BIG_STAR_SIZE;
 		
-	if (abs( new -> xv * 10 ) <= 5 && abs( new -> yv * 10 ) <= 5)
-		new -> r = 1;
+	if (abs( new -> xv * 10 ) <= STAR_SIZE_BORDER && abs( new -> yv * 10 ) <= STAR_SIZE_BORDER)
+		new -> r = SMALL_STAR_SIZE;
 		
-	new -> red = 220 + rand() % 36;
-	new -> green = 220 + rand() % 36;
-	new -> blue = 220 + rand() % 36;
+	new -> red = STAR_BRITNESS + rand() % STAR_COLOR_RANGE;
+	new -> green = STAR_BRITNESS + rand() % STAR_COLOR_RANGE;
+	new -> blue = STAR_BRITNESS + rand() % STAR_COLOR_RANGE;
 }
 
 
@@ -77,8 +89,8 @@ void move_stars(star *first)
 		t -> xv += t -> xa;
 		t -> yv += t -> ya;
 		
-		t -> xa = t -> xv * 0.02;
-		t -> ya = t -> yv * 0.02;
+		t -> xa = t -> xv * ACCELERATION_PERCENTAGE;
+		t -> ya = t -> yv * ACCELERATION_PERCENTAGE;
 
 		t -> x += t -> xv;
 		t -> y += t -> yv;
@@ -101,7 +113,7 @@ void display_stars(star *first)
 										al_map_rgb(t -> red, t -> green, t -> blue));
 	}
 	
-	draw_circle(SCREEN_W_CENTER, SCREEN_H_CENTER, 110, al_map_rgb(0, 0, 0));
+	draw_circle(SCREEN_W_CENTER, SCREEN_H_CENTER, BLACK_CIRCLE_RADIUS, al_map_rgb(0, 0, 0));
 	
 	al_flip_display();
 }
